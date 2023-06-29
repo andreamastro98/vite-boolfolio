@@ -10,7 +10,7 @@ export default {
           lastPage:null
         }
     },
-  mounted(){
+  created(){
     this.getProjects(1);
   },
   methods:{
@@ -48,6 +48,9 @@ export default {
                                         <h2 class="fw-bolder">{{ elem.title }}</h2>
                                         <h6 v-if="elem.type" class="fw-bolder">{{ elem.type.name }}</h6>                                   
                                         <p v-if="elem.description">{{ elem.description }}</p>
+                                        <button class="btn btn-primary">
+                                            <Router-link :to="{ name: 'SingleProject', params: { slug: elem.slug } }" class="nav-link" href="#">Show</Router-link>
+                                        </button>                                        
                                     </div>
                                     <img class="img-fluid" :src="`http://127.0.0.1:8000/storage/${elem.cover_image}`" alt="Title"/>
                                 </div>
