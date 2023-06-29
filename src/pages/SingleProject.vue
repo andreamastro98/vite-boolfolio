@@ -28,7 +28,7 @@ export default {
 
 <template>
     <div class="container">
-        <h1 v-if="project" class="text-center my-5"> {{ project.title }} </h1>
+        <h1 v-if="project" class="text-center my-5 text-gradient bg-gradient-primary-to-secondary"> {{ project.title }} </h1>
         <p v-if="project"> <b>Customer: </b> {{ project.customer }} </p>
         <p v-if="project"> <b>Description: </b> {{ project.description }} </p>
         <h5>Type:</h5>
@@ -37,6 +37,7 @@ export default {
             {{ elem.name }}
             </li>
         </ul>
+        <img class="img-fluid" :src="`http://127.0.0.1:8000/storage/${project.cover_image}`" alt="Title"/>
     </div>
 </template>
 
