@@ -28,9 +28,9 @@ export default {
             //     // redirect alla pagina 404
             //     this.$router.push({ name: 'not-found' })
             // }
-        });
-    },
-}
+            });
+        },
+    }
 }
 </script>
 

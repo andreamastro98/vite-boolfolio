@@ -7,25 +7,39 @@ export default {
           projects:[],
           baseUrl:'http://127.0.0.1:8000/api',
           currentPage:1,
-          lastPage:null
+          lastPage:null,
+          types:null,
+          selectedType:'all',
         }
     },
   created(){
     this.getProjects(1);
+    this.getTypes();
   },
   methods:{
     getProjects(projectApiPage){
-      axios.get(`${this.baseUrl}/projects`,{
-        params:{
-          page: projectApiPage
-        }
-      }).then(res=>{
+
+      const params = {
+        page: projectApiPage
+      }
+
+      if(this.selectedType !=='all'){
+        params.type_id = this.selectedType
+      }
+
+      axios.get(`${this.baseUrl}/projects`,{ params }).then(res=>{
         console.log(res.data);
         //inserire nella variabile projects i dati ricevuti dall'api
         this.projects = res.data.projects.data;
         this.currentPage = res.data.projects.current_page;
         this.lastPage = res.data.projects.last_page;
 
+      })
+    },
+    getTypes() {
+      axios.get(`${this.baseUrl}/types`).then(res => {
+        this.types = res.data.types
+        console.log(this.types)
       })
     }
   },
@@ -38,6 +52,14 @@ export default {
               <div class="text-center mb-5">
                   <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Projects</span></h1>
               </div>
+              <!-- select -->
+              <div class="container mb-5">
+                <select @change="getProjects" class="form-select" v-model="selectedType" aria-label="Default select example">
+                  <option value="all">-- All --</option>
+                  <option v-for="(elem,index) in types" :value="elem.id" :key="index">{{ elem.name }}</option>
+                </select>
+              </div>
+
               <div class="row gx-5 justify-content-center">
                   <div class="col-lg-11 col-xl-9 col-xxl-8">
                       <!-- Project Card 1-->
@@ -81,6 +103,10 @@ export default {
 
 .desc{
     width: 60%;
+}
+
+.form-select{
+  width: auto;
 }
 
 </style>
