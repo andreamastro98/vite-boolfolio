@@ -14,12 +14,20 @@ export default {
     methods: {
         getSingleProject(){
              axios.get(`${this.baseUrl}/projects/${this.$route.params.slug}`).then((response) => {
-            if (response.data.success) {
                 this.project = response.data.project;
-            } else {
-                // redirect alla pagina 404
-                this.$router.push({ name: 'not-found' })
-            }
+             }, error => {
+                if (error.response.status === 404) {
+                    this.$router.push({ name: 'NotFound' })
+                    } else {
+
+                    }
+
+            // if (response.data.success) {
+            //     this.project = response.data.project;
+            // } else {
+            //     // redirect alla pagina 404
+            //     this.$router.push({ name: 'not-found' })
+            // }
         });
     },
 }
@@ -31,9 +39,10 @@ export default {
         <h1 v-if="project" class="text-center my-5 text-gradient bg-gradient-primary-to-secondary"> {{ project.title }} </h1>
         <p v-if="project"> <b>Customer: </b> {{ project.customer }} </p>
         <p v-if="project"> <b>Description: </b> {{ project.description }} </p>
-        <h5>Type:</h5>
+        <p><b>Type: </b>{{ project.type.name }}</p>
+        <h5>Technology:</h5>
         <ul>
-            <li v-for="(elem,index) in project.type" :key="index">
+            <li v-for="(elem,index) in project.technologies" :key="index">
             {{ elem.name }}
             </li>
         </ul>
