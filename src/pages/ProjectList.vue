@@ -10,11 +10,20 @@ export default {
           lastPage:null,
           types:null,
           selectedType:'all',
+          technologies:null,
+          selectedTechnologies:[],
         }
     },
-  created(){
+  mounted(){
     this.getProjects(1);
     this.getTypes();
+    this.getTechnologies();
+  },
+  watch: {
+    selectedTechnologies: {
+      handler: 'getProjects',
+      deep: true
+    }
   },
   methods:{
     getProjects(projectApiPage){
@@ -27,6 +36,12 @@ export default {
         params.type_id = this.selectedType
       }
 
+      if (this.selectedTechnologies.length > 0) {
+        params.technologies_ids = this.selectedTechnologies.join(',')
+      }
+
+      //console.log('params info', params)
+
       axios.get(`${this.baseUrl}/projects`,{ params }).then(res=>{
         console.log(res.data);
         //inserire nella variabile projects i dati ricevuti dall'api
@@ -36,12 +51,21 @@ export default {
 
       })
     },
+
     getTypes() {
       axios.get(`${this.baseUrl}/types`).then(res => {
         this.types = res.data.types
-        console.log(this.types)
+        //console.log(this.types)
+      })
+    },
+
+    getTechnologies() {
+      axios.get(`${this.baseUrl}/technologies`).then(res => {
+        this.technologies = res.data.technologies
+        console.log(this.technologies)
       })
     }
+
   },
 }
 </script>
@@ -52,12 +76,28 @@ export default {
               <div class="text-center mb-5">
                   <h1 class="display-5 fw-bolder mb-0"><span class="text-gradient d-inline">Projects</span></h1>
               </div>
-              <!-- select -->
-              <div class="container mb-5">
-                <select @change="getProjects" class="form-select" v-model="selectedType" aria-label="Default select example">
-                  <option value="all">-- All --</option>
-                  <option v-for="(elem,index) in types" :value="elem.id" :key="index">{{ elem.name }}</option>
-                </select>
+              <div class="d-flex justify-content-around">
+
+                <div class="d-flex">
+                  <!-- checks -->
+                  <div class="form-check me-3" v-for="(elem, index) in technologies">
+                    <input class="form-check-input" type="checkbox" :value="elem.id" id="defaultCheck1" v-model="selectedTechnologies">
+                    <label class="form-check-label" for="defaultCheck1">
+                      {{elem.name}}
+                    </label>
+                  </div>
+                </div>
+
+                <div>
+                  <!-- select -->
+                  <div class="container mb-5">
+                    <select @change="getProjects" class="form-select" v-model="selectedType" aria-label="Default select example">
+                      <option value="all">-- All --</option>
+                      <option v-for="(elem,index) in types" :value="elem.id" :key="index">{{ elem.name }}</option>
+                    </select>
+                  </div>
+                </div>               
+
               </div>
 
               <div class="row gx-5 justify-content-center">
